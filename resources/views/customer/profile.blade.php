@@ -64,14 +64,14 @@
                     '{{ $v->plate_number }}',
                     '{{ $v->model }}'
                 )">
-                    <i class="ti ti-edit"></i>
+                    <i class="ti ti-edit"></i> Edit
                 </button>
                 <form method="POST"
                       action="{{ route('customer.vehicles.destroy', $v->vehicle_id) }}"
                       onsubmit="return confirm('Remove this vehicle?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn-delete"><i class="ti ti-trash"></i></button>
+                    <button type="submit" class="btn-delete"><i class="ti ti-trash"></i> Remove</button>
                 </form>
             </div>
         </div>

@@ -617,73 +617,81 @@ body {
 
 .btn-secondary:hover { background: #333; border-color: rgba(255,255,255,0.2); color: #fff; }
 
+/* Edit — solid amber/orange so it stands out on dark bg */
 .btn-edit {
-    background: rgba(192,57,43,0.08);
-    color: var(--red-dark);
-    border: 1px solid rgba(192,57,43,0.2);
-    padding: 5px 10px;
+    background: #b7530a;
+    color: #fff;
+    border: none;
+    padding: 5px 11px;
     border-radius: var(--radius-sm);
     font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     margin-right: 4px;
     transition: all 0.15s;
+    box-shadow: 0 2px 6px rgba(183,83,10,0.35);
 }
+.btn-edit:hover { background: #d4620d; transform: translateY(-1px); color: #fff; }
 
-.btn-edit:hover { background: var(--red); color: #fff; border-color: var(--red); }
-
+/* Delete — solid red */
 .btn-delete {
-    background: rgba(231,76,60,0.08);
-    color: #c0392b;
-    border: 1px solid rgba(231,76,60,0.2);
-    padding: 5px 10px;
+    background: #a81c1c;
+    color: #fff;
+    border: none;
+    padding: 5px 11px;
     border-radius: var(--radius-sm);
     font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     text-decoration: none;
     transition: all 0.15s;
+    box-shadow: 0 2px 6px rgba(168,28,28,0.35);
 }
+.btn-delete:hover { background: #c0392b; transform: translateY(-1px); color: #fff; }
 
-.btn-delete:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
-
+/* Status — solid blue/teal */
 .btn-status {
-    background: rgba(52,152,219,0.08);
-    color: #2980b9;
-    border: 1px solid rgba(52,152,219,0.2);
-    padding: 5px 10px;
+    background: #1a5f8a;
+    color: #fff;
+    border: none;
+    padding: 5px 11px;
     border-radius: var(--radius-sm);
     font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     margin-right: 4px;
     transition: all 0.15s;
+    box-shadow: 0 2px 6px rgba(26,95,138,0.35);
 }
+.btn-status:hover { background: #2471a3; transform: translateY(-1px); color: #fff; }
 
-.btn-status:hover { background: #3498db; color: #fff; border-color: #3498db; }
-
+/* Permission — solid green */
 .btn-permission {
-    background: rgba(39,174,96,0.08);
-    color: #1e8449;
-    border: 1px solid rgba(39,174,96,0.2);
-    padding: 5px 10px;
+    background: #1a7a45;
+    color: #fff;
+    border: none;
+    padding: 5px 11px;
     border-radius: var(--radius-sm);
     font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     margin-right: 4px;
     transition: all 0.15s;
+    box-shadow: 0 2px 6px rgba(26,122,69,0.35);
 }
-
-.btn-permission:hover { background: #27ae60; color: #fff; border-color: #27ae60; }
+.btn-permission:hover { background: #27ae60; transform: translateY(-1px); color: #fff; }
 
 /* ================================================
    SEARCH BAR
@@ -744,7 +752,7 @@ body {
     color: #d0d0d0;
 }
 
-.data-table tbody tr:hover { background: rgba(192,57,43,0.06); }
+.data-table tbody tr:hover { background: linear-gradient(90deg, rgba(192,57,43,0.22), rgba(192,57,43,0.08)); }
 
 .empty-row {
     text-align: center;
@@ -862,53 +870,53 @@ body {
    ================================================ */
 .status-badge {
     display: inline-block;
-    padding: 3px 10px;
+    padding: 4px 11px;
     border-radius: 20px;
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-weight: 700;
+    letter-spacing: 0.03em;
 }
 
-.status-pending   { background: #fef9e7; color: #d68910; border: 1px solid rgba(214,137,16,0.25); }
-.status-confirmed { background: #eafaf1; color: #1e8449; border: 1px solid rgba(30,132,73,0.25); }
-.status-cancelled { background: #fdedec; color: #c0392b; border: 1px solid rgba(192,57,43,0.25); }
-.status-completed { background: #f4ecf7; color: #7d3c98; border: 1px solid rgba(125,60,152,0.25); }
+.status-pending   { background: #7d4e00; color: #ffc14d; border: 1px solid #a86800; }
+.status-confirmed { background: #0a4d28; color: #4ddb8a; border: 1px solid #0e6b38; }
+.status-cancelled { background: #5c1010; color: #ff6b6b; border: 1px solid #7a1515; }
+.status-completed { background: #2d1a5c; color: #b388ff; border: 1px solid #3d2480; }
 
 /* ================================================
    ROLE BADGES
    ================================================ */
 .role-badge {
     display: inline-block;
-    padding: 3px 10px;
+    padding: 4px 11px;
     border-radius: 20px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
 }
 
-.role-admin    { background: rgba(192,57,43,0.1); color: var(--red-dark); border: 1px solid rgba(192,57,43,0.2); }
-.role-advisor  { background: rgba(39,174,96,0.1); color: #1e8449; border: 1px solid rgba(39,174,96,0.2); }
-.role-customer { background: rgba(52,152,219,0.1); color: #2471a3; border: 1px solid rgba(52,152,219,0.2); }
+.role-admin    { background: #5c1010; color: #ff7070; border: 1px solid #7a1515; }
+.role-advisor  { background: #0a4d28; color: #4ddb8a; border: 1px solid #0e6b38; }
+.role-customer { background: #0a2f5c; color: #5daaff; border: 1px solid #0e4080; }
 
 /* ================================================
    ACTION BADGES (Audit log)
    ================================================ */
 .action-badge {
     display: inline-block;
-    padding: 3px 10px;
+    padding: 4px 11px;
     border-radius: 20px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     flex-shrink: 0;
 }
 
-.badge-insert { background: rgba(39,174,96,0.1);  color: #1e8449; }
-.badge-update { background: rgba(230,126,34,0.1); color: #d35400; }
-.badge-delete { background: rgba(192,57,43,0.1);  color: var(--red-dark); }
-.badge-login  { background: rgba(39,174,96,0.1);  color: #1e8449; }
-.badge-logout { background: rgba(142,68,173,0.1); color: #6c3483; }
-.badge-failed { background: rgba(230,126,34,0.1); color: #d35400; }
-.badge-locked { background: rgba(192,57,43,0.1);  color: var(--red-dark); }
-.badge-reset  { background: rgba(52,152,219,0.1); color: #2471a3; }
+.badge-insert { background: #0a4d28; color: #4ddb8a; border: 1px solid #0e6b38; }
+.badge-update { background: #5c3200; color: #ffaa33; border: 1px solid #7a4400; }
+.badge-delete { background: #5c1010; color: #ff6b6b; border: 1px solid #7a1515; }
+.badge-login  { background: #0a3d5c; color: #4dc8ff; border: 1px solid #0e5280; }
+.badge-logout { background: #2d1a5c; color: #b388ff; border: 1px solid #3d2480; }
+.badge-failed { background: #5c3200; color: #ffaa33; border: 1px solid #7a4400; }
+.badge-locked { background: #5c1010; color: #ff6b6b; border: 1px solid #7a1515; }
+.badge-reset  { background: #0a3d5c; color: #4dc8ff; border: 1px solid #0e5280; }
 
 .table-badge {
     display: inline-block;
@@ -934,12 +942,14 @@ body {
    ================================================ */
 .service-badge {
     display: inline-block;
-    background: rgba(192,57,43,0.08);
-    color: var(--red-dark);
-    font-size: 11px;
-    padding: 2px 8px;
+    background: #5c1010;
+    color: #ff8a80;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
     border-radius: 20px;
     margin: 2px;
+    border: 1px solid #7a1515;
 }
 
 .checkbox-group {

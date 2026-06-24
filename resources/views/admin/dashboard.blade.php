@@ -197,17 +197,34 @@ new Chart(ordersCtx, {
         datasets: [{
             label: 'Repair Orders',
             data: {!! json_encode($monthlyOrders->pluck('count')) !!},
-            backgroundColor: '#4f46e5',
+            backgroundColor: 'rgba(192,57,43,0.75)',
+            borderColor: '#e74c3c',
+            borderWidth: 1,
             borderRadius: 6,
+            hoverBackgroundColor: '#e74c3c',
         }]
     },
     options: {
         responsive: true,
-        plugins: { legend: { display: false } },
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: '#1e1e1e',
+                titleColor: '#fff',
+                bodyColor: '#ccc',
+                borderColor: 'rgba(255,255,255,0.1)',
+                borderWidth: 1,
+            }
+        },
         scales: {
+            x: {
+                ticks: { color: '#888', font: { size: 11 } },
+                grid: { color: 'rgba(255,255,255,0.05)' },
+            },
             y: {
                 beginAtZero: true,
-                ticks: { stepSize: 1 }
+                ticks: { stepSize: 1, color: '#888', font: { size: 11 } },
+                grid: { color: 'rgba(255,255,255,0.05)' },
             }
         }
     }
@@ -226,9 +243,10 @@ new Chart(aptCtx, {
                 {{ $appointmentStatus['cancelled'] }},
                 {{ $appointmentStatus['completed'] }}
             ],
-            backgroundColor: ['#faeeda', '#e1f5ee', '#faece7', '#eeedfe'],
-            borderColor: ['#854f0b', '#0f6e56', '#993c1d', '#534ab7'],
-            borderWidth: 1,
+            backgroundColor: ['#b86e00', '#0e6b38', '#7a1515', '#3d2480'],
+            borderColor:     ['#ffc14d', '#4ddb8a', '#ff6b6b', '#b388ff'],
+            borderWidth: 2,
+            hoverBackgroundColor: ['#d4820a', '#15a857', '#a81c1c', '#5c35b0'],
         }]
     },
     options: {
@@ -236,7 +254,20 @@ new Chart(aptCtx, {
         plugins: {
             legend: {
                 position: 'bottom',
-                labels: { font: { size: 11 } }
+                labels: {
+                    font: { size: 12 },
+                    color: '#ccc',
+                    padding: 16,
+                    usePointStyle: true,
+                    pointStyleWidth: 10,
+                }
+            },
+            tooltip: {
+                backgroundColor: '#1e1e1e',
+                titleColor: '#fff',
+                bodyColor: '#ccc',
+                borderColor: 'rgba(255,255,255,0.1)',
+                borderWidth: 1,
             }
         }
     }
