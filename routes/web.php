@@ -171,6 +171,8 @@ Route::middleware(['auth', 'advisor'])->prefix('advisor')->name('advisor.')->gro
         Route::post('/', [AdvisorAppointmentController::class, 'store'])->name('appointments.store');
         Route::put('/{id}', [AdvisorAppointmentController::class, 'update'])->name('appointments.update');
         Route::delete('/{id}', [AdvisorAppointmentController::class, 'destroy'])->name('appointments.destroy');
+        Route::put('/{id}/accept', [AdvisorAppointmentController::class, 'accept'])->name('appointments.accept');
+        Route::put('/{id}/decline', [AdvisorAppointmentController::class, 'decline'])->name('appointments.decline');
     });
 
     // System pages (visible if admin grants permission)

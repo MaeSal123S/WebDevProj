@@ -31,13 +31,13 @@
                class="nav-item {{ request()->routeIs('customer.dashboard') ? 'active' : '' }}">
                 <i class="ti ti-layout-dashboard"></i> Dashboard
             </a>
-            <a href="{{ route('customer.appointments.index') }}"
-               class="nav-item {{ request()->routeIs('customer.appointments.*') ? 'active' : '' }}">
-                <i class="ti ti-calendar"></i> My Appointments
-            </a>
             <a href="{{ route('customer.profile') }}"
                class="nav-item {{ request()->routeIs('customer.profile') ? 'active' : '' }}">
                 <i class="ti ti-user"></i> My Profile & Vehicles
+            </a>
+            <a href="{{ route('customer.appointments.index') }}"
+               class="nav-item {{ request()->routeIs('customer.appointments.*') ? 'active' : '' }}">
+                <i class="ti ti-calendar"></i> My Appointments
             </a>
         </div>
 

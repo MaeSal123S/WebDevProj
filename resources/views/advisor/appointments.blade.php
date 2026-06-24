@@ -5,7 +5,7 @@
 <div class="page-header">
     <div>
         <div class="section-title">Appointments</div>
-        <h5 class="page-heading">My Appointments</h5>
+        <h5 class="page-heading">Appointments</h5>
     </div>
     @if($currentUser->hasPermission('appointment', 'add'))
     <button class="btn-primary" onclick="openModal('addModal')">
@@ -14,9 +14,121 @@
     @endif
 </div>
 
+{{-- =============================================
+     SECTION 1: PENDING BOOKINGS FROM CUSTOMERS
+     ============================================= --}}
+<div class="panel" style="margin-bottom:16px;">
+    <div class="panel-header">
+        <div class="panel-title" style="display:flex;align-items:center;gap:8px;">
+            <i class="ti ti-inbox" style="color:var(--red-light);font-size:16px;"></i>
+            Pending Bookings
+            @if($pendingBookings->count() > 0)
+            <span style="background:var(--red);color:#fff;font-size:10px;font-weight:700;
+                         padding:2px 7px;border-radius:20px;line-height:1.4;">
+                {{ $pendingBookings->count() }}
+            </span>
+            @endif
+        </div>
+        <span style="font-size:11px;color:#666;">
+            Customer bookings waiting for an advisor to accept
+        </span>
+    </div>
+
+    @if($pendingBookings->isEmpty())
+    <div class="empty-state">
+        <i class="ti ti-calendar-off"></i>
+        <p>No pending bookings at the moment</p>
+    </div>
+    @else
+    <table class="data-table" id="pendingTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Services</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($pendingBookings as $index => $row)
+            <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ \Carbon\Carbon::parse($row->appointment_date)->format('M d, Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($row->appointment_time)->format('h:i A') }}</td>
+                <td>
+                    @if($row->customer)
+                        <span style="font-weight:600;color:#e0e0e0;">
+                            {{ $row->customer->first_name }} {{ $row->customer->last_name }}
+                        </span>
+                    @else
+                        <span style="color:#666;">—</span>
+                    @endif
+                </td>
+                <td>
+                    @if($row->vehicle)
+                        {{ $row->vehicle->plate_number }}<br>
+                        <small>{{ $row->vehicle->model }}</small>
+                    @else
+                        <span style="color:#666;">—</span>
+                    @endif
+                </td>
+                <td>
+                    @forelse($row->serviceTypes as $st)
+                        <span class="service-badge">{{ $st->service_type_name }}</span>
+                    @empty
+                        <span style="color:#666;">—</span>
+                    @endforelse
+                </td>
+                <td style="font-size:12px;color:#bbb;max-width:160px;">
+                    {{ $row->notes ?? '—' }}
+                </td>
+                <td style="white-space:nowrap;">
+                    @if($currentUser->hasPermission('appointment', 'edit'))
+                    {{-- ACCEPT --}}
+                    <form method="POST"
+                          action="{{ route('advisor.appointments.accept', $row->appointment_id) }}"
+                          style="display:inline;">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn-accept"
+                                title="Accept this appointment">
+                            <i class="ti ti-check"></i> Accept
+                        </button>
+                    </form>
+                    {{-- DECLINE --}}
+                    <form method="POST"
+                          action="{{ route('advisor.appointments.decline', $row->appointment_id) }}"
+                          style="display:inline;"
+                          onsubmit="return confirm('Decline this appointment?')">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn-decline"
+                                title="Decline this appointment">
+                            <i class="ti ti-x"></i> Decline
+                        </button>
+                    </form>
+                    @endif
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    @endif
+</div>
+
+{{-- =============================================
+     SECTION 2: MY ACCEPTED APPOINTMENTS
+     ============================================= --}}
 <div class="panel">
     <div class="panel-header">
-        <div class="panel-title">Appointment list</div>
+        <div class="panel-title" style="display:flex;align-items:center;gap:8px;">
+            <i class="ti ti-calendar-check" style="color:#4ddb8a;font-size:16px;"></i>
+            My Appointments
+        </div>
         <div class="search-wrap">
             <i class="ti ti-search"></i>
             <input type="text" id="searchInput"
@@ -31,37 +143,37 @@
                 <th>Time</th>
                 <th>Customer</th>
                 <th>Vehicle</th>
-                <th>Service</th>
+                <th>Services</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($appointments as $index => $row)
+            @forelse($myAppointments as $index => $row)
             <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ $row->appointment_date }}</td>
+                <td>{{ \Carbon\Carbon::parse($row->appointment_date)->format('M d, Y') }}</td>
                 <td>{{ \Carbon\Carbon::parse($row->appointment_time)->format('h:i A') }}</td>
                 <td>
                     @if($row->customer)
                         {{ $row->customer->first_name }} {{ $row->customer->last_name }}
                     @else
-                        <span style="color:#aaa">—</span>
+                        <span style="color:#666;">—</span>
                     @endif
                 </td>
                 <td>
                     @if($row->vehicle)
                         {{ $row->vehicle->plate_number }}<br>
-                        <small style="color:#888">{{ $row->vehicle->model }}</small>
+                        <small>{{ $row->vehicle->model }}</small>
                     @else
-                        <span style="color:#aaa">—</span>
+                        <span style="color:#666;">—</span>
                     @endif
                 </td>
                 <td>
                     @forelse($row->serviceTypes as $st)
                         <span class="service-badge">{{ $st->service_type_name }}</span>
                     @empty
-                        {{ $row->serviceType->service_type_name ?? '—' }}
+                        <span style="color:#666;">—</span>
                     @endforelse
                 </td>
                 <td>
@@ -78,7 +190,7 @@
                         {{ ucfirst($row->status) }}
                     </span>
                 </td>
-                <td>
+                <td style="white-space:nowrap;">
                     @if($currentUser->hasPermission('appointment', 'edit'))
                     <button class="btn-edit" onclick="openEditModal(
                         '{{ $row->appointment_id }}',
@@ -108,14 +220,14 @@
             </tr>
             @empty
             <tr>
-                <td colspan="8" class="empty-row">No appointments found</td>
+                <td colspan="8" class="empty-row">No appointments yet</td>
             </tr>
             @endforelse
         </tbody>
     </table>
 </div>
 
-<!-- ADD MODAL -->
+{{-- ADD MODAL --}}
 <div class="modal-overlay" id="addModal">
     <div class="modal-box" style="width:500px">
         <div class="modal-header">
@@ -159,8 +271,7 @@
             </div>
             <div class="form-group">
                 <label>Date</label>
-                <input type="date" name="appointment_date" required
-                       min="{{ date('Y-m-d') }}">
+                <input type="date" name="appointment_date" required min="{{ date('Y-m-d') }}">
             </div>
             <div class="form-group">
                 <label>Time</label>
@@ -171,15 +282,14 @@
                 <input type="text" name="notes" placeholder="Additional notes">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-secondary"
-                        onclick="closeModal('addModal')">Cancel</button>
+                <button type="button" class="btn-secondary" onclick="closeModal('addModal')">Cancel</button>
                 <button type="submit" class="btn-primary">Save</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- EDIT MODAL -->
+{{-- EDIT MODAL --}}
 <div class="modal-overlay" id="editModal">
     <div class="modal-box" style="width:500px">
         <div class="modal-header">
@@ -212,7 +322,7 @@
             </div>
             <div class="form-group">
                 <label>Service types <span style="font-size:11px;color:#777;">(select one or more)</span></label>
-                <div class="checkbox-group" id="edit_service_types" style="max-height:140px;">
+                <div class="checkbox-group" style="max-height:140px;">
                     @foreach($service_types as $st)
                     <label class="checkbox-item">
                         <input type="checkbox" name="service_type_ids[]"
@@ -236,8 +346,7 @@
                 <input type="text" name="notes" id="edit_notes" placeholder="Additional notes">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-secondary"
-                        onclick="closeModal('editModal')">Cancel</button>
+                <button type="button" class="btn-secondary" onclick="closeModal('editModal')">Cancel</button>
                 <button type="submit" class="btn-primary">Update</button>
             </div>
         </form>
@@ -248,31 +357,27 @@
 
 @section('scripts')
 <script>
-function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+function openModal(id)  { document.getElementById(id).style.display = 'flex'; }
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
 function showCustomerVehicle(customerId, displayId, hiddenId) {
     const display = document.getElementById(displayId);
     const hidden  = document.getElementById(hiddenId);
-
     if (!customerId) {
         display.innerHTML = '<i class="ti ti-car"></i> Select a customer first';
         hidden.value = '';
         return;
     }
-
     display.innerHTML = '<i class="ti ti-loader"></i> Loading...';
-
     fetch(`/advisor/vehicles-by-customer/${customerId}`)
-        .then(response => response.json())
+        .then(r => r.json())
         .then(vehicles => {
             if (vehicles.length === 0) {
                 display.innerHTML = '<i class="ti ti-alert-circle"></i> No vehicle registered';
                 hidden.value = '';
             } else {
-                const vehicle = vehicles[0];
-                display.innerHTML = `<i class="ti ti-car"></i> ${vehicle.plate_number} — ${vehicle.model}`;
-                hidden.value = vehicle.vehicle_id;
+                display.innerHTML = `<i class="ti ti-car"></i> ${vehicles[0].plate_number} — ${vehicles[0].model}`;
+                hidden.value = vehicles[0].vehicle_id;
             }
         });
 }
@@ -284,7 +389,6 @@ function openEditModal(id, customerId, vehicleId, serviceTypeIds, date, time, no
     document.getElementById('edit_notes').value    = notes;
     document.getElementById('editForm').action     = `/advisor/appointments/${id}`;
 
-    // Tick the right checkboxes
     document.querySelectorAll('.adv-edit-st-check').forEach(cb => {
         cb.checked = serviceTypeIds.includes(parseInt(cb.value));
     });
@@ -292,20 +396,18 @@ function openEditModal(id, customerId, vehicleId, serviceTypeIds, date, time, no
     const display = document.getElementById('edit_vehicle_display');
     const hidden  = document.getElementById('edit_vehicle_id');
     display.innerHTML = '<i class="ti ti-loader"></i> Loading...';
-
     fetch(`/advisor/vehicles-by-customer/${customerId}`)
-        .then(response => response.json())
+        .then(r => r.json())
         .then(vehicles => {
-            const vehicle = vehicles.find(v => v.vehicle_id == vehicleId);
-            if (vehicle) {
-                display.innerHTML = `<i class="ti ti-car"></i> ${vehicle.plate_number} — ${vehicle.model}`;
-                hidden.value = vehicle.vehicle_id;
+            const v = vehicles.find(v => v.vehicle_id == vehicleId);
+            if (v) {
+                display.innerHTML = `<i class="ti ti-car"></i> ${v.plate_number} — ${v.model}`;
+                hidden.value = v.vehicle_id;
             } else {
                 display.innerHTML = '<i class="ti ti-alert-circle"></i> No vehicle found';
                 hidden.value = '';
             }
         });
-
     openModal('editModal');
 }
 

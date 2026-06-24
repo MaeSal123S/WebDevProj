@@ -27,20 +27,91 @@ class AppointmentController extends Controller
                 ->with('error', 'You do not have permission to view appointments!');
         }
 
-        $advisorId     = Auth::user()->advisor_id;
-        $appointments  = Appointment::with(['customer', 'vehicle', 'serviceTypes', 'bookedBy'])
+        $advisorId = Auth::user()->advisor_id;
+
+        // Unassigned bookings from customers (no advisor yet, still pending)
+        $pendingBookings = Appointment::with(['customer', 'vehicle', 'serviceTypes', 'bookedBy'])
+            ->whereNull('advisor_id')
+            ->where('status', 'pending')
+            ->orderBy('appointment_date', 'asc')
+            ->orderBy('appointment_time', 'asc')
+            ->get();
+
+        // This advisor's own accepted appointments
+        $myAppointments = Appointment::with(['customer', 'vehicle', 'serviceTypes', 'bookedBy'])
             ->where('advisor_id', $advisorId)
             ->orderBy('appointment_date', 'asc')
             ->orderBy('appointment_time', 'asc')
             ->get();
+
         $customers     = Customer::orderBy('last_name')->get();
         $service_types = ServiceType::orderBy('service_type_name')->get();
 
         return view('advisor.appointments', compact(
-            'appointments',
+            'pendingBookings',
+            'myAppointments',
             'customers',
             'service_types'
         ));
+    }
+
+    // Accept: assign this advisor + set confirmed
+    public function accept($id)
+    {
+        if (!$this->currentUser()->hasPermission('appointment', 'edit')) {
+            return redirect()->route('advisor.appointments.index')
+                ->with('error', 'You do not have permission to accept appointments!');
+        }
+
+        $appointment = Appointment::whereNull('advisor_id')
+            ->where('status', 'pending')
+            ->findOrFail($id);
+
+        $advisorId = Auth::user()->advisor_id;
+
+        $appointment->update([
+            'advisor_id' => $advisorId,
+            'status'     => 'confirmed',
+        ]);
+
+        AuditLog::create([
+            'user_id'    => Auth::id(),
+            'action'     => 'UPDATE',
+            'table_name' => 'appointments',
+            'record_id'  => $id,
+            'changes'    => "Advisor #{$advisorId} accepted appointment #{$id}",
+            'timestamp'  => now(),
+        ]);
+
+        return redirect()->route('advisor.appointments.index')
+            ->with('success', 'Appointment accepted — you are now the assigned advisor.');
+    }
+
+    // Decline: set cancelled, leave advisor_id null
+    public function decline($id)
+    {
+        if (!$this->currentUser()->hasPermission('appointment', 'edit')) {
+            return redirect()->route('advisor.appointments.index')
+                ->with('error', 'You do not have permission to decline appointments!');
+        }
+
+        $appointment = Appointment::whereNull('advisor_id')
+            ->where('status', 'pending')
+            ->findOrFail($id);
+
+        $appointment->update(['status' => 'cancelled']);
+
+        AuditLog::create([
+            'user_id'    => Auth::id(),
+            'action'     => 'UPDATE',
+            'table_name' => 'appointments',
+            'record_id'  => $id,
+            'changes'    => "Advisor declined appointment #{$id}",
+            'timestamp'  => now(),
+        ]);
+
+        return redirect()->route('advisor.appointments.index')
+            ->with('success', 'Appointment declined.');
     }
 
     public function store(Request $request)
