@@ -38,6 +38,18 @@ class Appointment extends Model
             ->withTrashed();
     }
 
+    // Many-to-many: multiple service types per appointment
+    public function serviceTypes() {
+        return $this->belongsToMany(
+            ServiceType::class,
+            'appointment_service_types',
+            'appointment_id',
+            'service_type_id',
+            'appointment_id',
+            'service_type_id'
+        )->withTrashed();
+    }
+
     public function advisor() {
         return $this->belongsTo(ServiceAdvisor::class, 'advisor_id', 'advisor_id')
             ->withTrashed();

@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $user     = User::find(Auth::id());
         $customer = $user->customer;
 
-        $appointments = Appointment::with(['serviceType', 'advisor'])
+        $appointments = Appointment::with(['serviceTypes', 'advisor', 'vehicle'])
             ->where('customer_id', $customer->customer_id)
             ->orderBy('appointment_date', 'desc')
             ->get();

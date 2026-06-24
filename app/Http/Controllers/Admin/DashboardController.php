@@ -84,7 +84,7 @@ class DashboardController extends Controller
             ->get();
 
         // Today's appointments
-        $todayAppointmentList = Appointment::with(['customer', 'serviceType', 'advisor'])
+        $todayAppointmentList = Appointment::with(['customer', 'serviceTypes', 'advisor'])
             ->whereDate('appointment_date', today())
             ->orderBy('appointment_time', 'asc')
             ->get();

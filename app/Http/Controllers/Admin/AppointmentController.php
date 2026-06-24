@@ -27,7 +27,7 @@ class AppointmentController extends Controller
                 ->with('error', 'You do not have permission to view appointments!');
         }
 
-        $appointments  = Appointment::with(['customer', 'vehicle', 'serviceType', 'advisor', 'bookedBy'])
+        $appointments  = Appointment::with(['customer', 'vehicle', 'serviceTypes', 'advisor', 'bookedBy'])
             ->orderBy('appointment_date', 'asc')
             ->orderBy('appointment_time', 'asc')
             ->get();
@@ -55,7 +55,7 @@ class AppointmentController extends Controller
         $request->validate([
             'customer_id'      => ['required'],
             'vehicle_id'       => ['required'],
-            'service_type_id'  => ['required'],
+            'service_type_ids' => ['required', 'array', 'min:1'],
             'appointment_date' => ['required', 'date', 'after_or_equal:today'],
             'appointment_time' => ['required'],
         ]);
@@ -63,7 +63,7 @@ class AppointmentController extends Controller
         $appointment = Appointment::create([
             'customer_id'      => $request->customer_id,
             'vehicle_id'       => $request->vehicle_id,
-            'service_type_id'  => $request->service_type_id,
+            'service_type_id'  => $request->service_type_ids[0], // keep legacy column
             'advisor_id'       => $request->advisor_id ?? null,
             'appointment_date' => $request->appointment_date,
             'appointment_time' => $request->appointment_time,
@@ -72,6 +72,8 @@ class AppointmentController extends Controller
             'booked_by'        => Auth::id(),
             'created_at'       => now(),
         ]);
+
+        $appointment->serviceTypes()->sync($request->service_type_ids);
 
         AuditLog::create([
             'user_id'    => Auth::id(),
@@ -96,7 +98,7 @@ class AppointmentController extends Controller
         $request->validate([
             'customer_id'      => ['required'],
             'vehicle_id'       => ['required'],
-            'service_type_id'  => ['required'],
+            'service_type_ids' => ['required', 'array', 'min:1'],
             'appointment_date' => ['required', 'date'],
             'appointment_time' => ['required'],
         ]);
@@ -105,12 +107,14 @@ class AppointmentController extends Controller
         $appointment->update([
             'customer_id'      => $request->customer_id,
             'vehicle_id'       => $request->vehicle_id,
-            'service_type_id'  => $request->service_type_id,
+            'service_type_id'  => $request->service_type_ids[0],
             'advisor_id'       => $request->advisor_id ?? null,
             'appointment_date' => $request->appointment_date,
             'appointment_time' => $request->appointment_time,
             'notes'            => $request->notes ?? null,
         ]);
+
+        $appointment->serviceTypes()->sync($request->service_type_ids);
 
         AuditLog::create([
             'user_id'    => Auth::id(),
@@ -178,15 +182,19 @@ class AppointmentController extends Controller
 
     public function calendarData()
     {
-        $appointments = Appointment::with(['customer', 'serviceType', 'advisor'])
+        $appointments = Appointment::with(['customer', 'serviceTypes', 'advisor'])
             ->get()
             ->map(function ($appointment) {
                 $statusColors = [
-                    'pending'   => '#faeeda',
-                    'confirmed' => '#e1f5ee',
-                    'cancelled' => '#faece7',
-                    'completed' => '#eeedfe',
+                    'pending'   => '#7d4e00',
+                    'confirmed' => '#0a4d28',
+                    'cancelled' => '#5c1010',
+                    'completed' => '#2d1a5c',
                 ];
+
+                $serviceNames = $appointment->serviceTypes->isNotEmpty()
+                    ? $appointment->serviceTypes->pluck('service_type_name')->join(', ')
+                    : ($appointment->serviceType->service_type_name ?? '—');
 
                 return [
                     'id'    => $appointment->appointment_id,
@@ -194,9 +202,9 @@ class AppointmentController extends Controller
                         ? $appointment->customer->first_name . ' ' . $appointment->customer->last_name
                         : 'Unknown',
                     'start' => $appointment->appointment_date . 'T' . $appointment->appointment_time,
-                    'color' => $statusColors[$appointment->status] ?? '#eeedfe',
+                    'color' => $statusColors[$appointment->status] ?? '#2d1a5c',
                     'extendedProps' => [
-                        'service'  => $appointment->serviceType->service_type_name ?? '—',
+                        'service'  => $serviceNames,
                         'advisor'  => $appointment->advisor
                             ? $appointment->advisor->first_name . ' ' . $appointment->advisor->last_name
                             : '—',

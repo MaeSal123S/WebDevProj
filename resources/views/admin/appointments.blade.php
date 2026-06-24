@@ -67,7 +67,13 @@
                         <span style="color:#aaa">—</span>
                     @endif
                 </td>
-                <td>{{ $row->serviceType->service_type_name ?? '—' }}</td>
+                <td>
+                    @forelse($row->serviceTypes as $st)
+                        <span class="service-badge">{{ $st->service_type_name }}</span>
+                    @empty
+                        {{ $row->serviceType->service_type_name ?? '—' }}
+                    @endforelse
+                </td>
                 <td>
                     @if($row->advisor)
                         {{ $row->advisor->first_name }} {{ $row->advisor->last_name }}
@@ -96,10 +102,10 @@
                         '{{ $row->appointment_id }}',
                         '{{ $row->customer_id }}',
                         '{{ $row->vehicle_id }}',
-                        '{{ $row->service_type_id }}',
+                        {{ json_encode($row->serviceTypes->pluck('service_type_id')) }},
                         '{{ $row->appointment_date }}',
                         '{{ $row->appointment_time }}',
-                        '{{ $row->notes ?? '' }}'
+                        '{{ addslashes($row->notes ?? '') }}'
                     )">
                         <i class="ti ti-edit"></i> Edit
                     </button>
@@ -164,15 +170,19 @@
                 <input type="hidden" name="vehicle_id" id="add_vehicle_id">
             </div>
             <div class="form-group">
-                <label>Service type</label>
-                <select name="service_type_id" required>
-                    <option value="">Select service type</option>
+                <label>Service types <span style="font-size:11px;color:#777;">(select one or more)</span></label>
+                <div class="checkbox-group" style="max-height:140px;">
                     @foreach($service_types as $st)
-                        <option value="{{ $st->service_type_id }}">
-                            {{ $st->service_type_name }}
-                        </option>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="service_type_ids[]"
+                               value="{{ $st->service_type_id }}">
+                        {{ $st->service_type_name }}
+                        <span style="color:#888;font-size:11px;">
+                            ({{ $st->predetermined_hours }}h — ₱{{ number_format($st->book_rate,2) }})
+                        </span>
+                    </label>
                     @endforeach
-                </select>
+                </div>
             </div>
             <div class="form-group">
                 <label>Date</label>
@@ -184,7 +194,7 @@
                 <input type="time" name="appointment_time" required>
             </div>
             <div class="form-group">
-                <label>Notes <span style="color:#aaa;font-size:11px;">(optional)</span></label>
+                <label>Notes <span style="color:#777;font-size:11px;">(optional)</span></label>
                 <input type="text" name="notes" placeholder="Additional notes">
             </div>
             <div class="modal-footer">
@@ -228,15 +238,20 @@
                 <input type="hidden" name="vehicle_id" id="edit_vehicle_id">
             </div>
             <div class="form-group">
-                <label>Service type</label>
-                <select name="service_type_id" id="edit_service_type" required>
-                    <option value="">Select service type</option>
+                <label>Service types <span style="font-size:11px;color:#777;">(select one or more)</span></label>
+                <div class="checkbox-group" id="edit_service_types" style="max-height:140px;">
                     @foreach($service_types as $st)
-                        <option value="{{ $st->service_type_id }}">
-                            {{ $st->service_type_name }}
-                        </option>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="service_type_ids[]"
+                               value="{{ $st->service_type_id }}"
+                               class="edit-st-check">
+                        {{ $st->service_type_name }}
+                        <span style="color:#888;font-size:11px;">
+                            ({{ $st->predetermined_hours }}h — ₱{{ number_format($st->book_rate,2) }})
+                        </span>
+                    </label>
                     @endforeach
-                </select>
+                </div>
             </div>
             <div class="form-group">
                 <label>Date</label>
@@ -247,7 +262,7 @@
                 <input type="time" name="appointment_time" id="edit_time" required>
             </div>
             <div class="form-group">
-                <label>Notes <span style="color:#aaa;font-size:11px;">(optional)</span></label>
+                <label>Notes <span style="color:#777;font-size:11px;">(optional)</span></label>
                 <input type="text" name="notes" id="edit_notes" placeholder="Additional notes">
             </div>
             <div class="modal-footer">
@@ -322,17 +337,20 @@ function showCustomerVehicle(customerId, displayId, hiddenId) {
         });
 }
 
-function openEditModal(id, customerId, vehicleId, serviceTypeId, date, time, notes) {
+function openEditModal(id, customerId, vehicleId, serviceTypeIds, date, time, notes) {
     document.getElementById('edit_customer').value = customerId;
-    document.getElementById('edit_service_type').value = serviceTypeId;
     document.getElementById('edit_date').value = date;
     document.getElementById('edit_time').value = time;
     document.getElementById('edit_notes').value = notes;
     document.getElementById('editForm').action = `/admin/appointments/${id}`;
 
+    // Tick correct service type checkboxes
+    document.querySelectorAll('.edit-st-check').forEach(cb => {
+        cb.checked = serviceTypeIds.includes(parseInt(cb.value));
+    });
+
     const display = document.getElementById('edit_vehicle_display');
     const hidden  = document.getElementById('edit_vehicle_id');
-
     display.innerHTML = '<i class="ti ti-loader"></i> Loading...';
 
     fetch(`/admin/vehicles-by-customer/${customerId}`)

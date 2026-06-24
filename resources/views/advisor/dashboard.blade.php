@@ -43,7 +43,11 @@
                     {{ $apt->customer->first_name ?? '—' }} {{ $apt->customer->last_name ?? '' }}
                 </div>
                 <div class="order-meta">
-                    {{ $apt->serviceType->service_type_name ?? '—' }}
+                    @forelse($apt->serviceTypes as $st)
+                        {{ $st->service_type_name }}{{ !$loop->last ? ', ' : '' }}
+                    @empty
+                        {{ $apt->serviceType->service_type_name ?? '—' }}
+                    @endforelse
                     &mdash; {{ \Carbon\Carbon::parse($apt->appointment_time)->format('h:i A') }}
                 </div>
             </div>
@@ -73,7 +77,11 @@
                     {{ $apt->customer->first_name ?? '—' }} {{ $apt->customer->last_name ?? '' }}
                 </div>
                 <div class="order-meta">
-                    {{ $apt->serviceType->service_type_name ?? '—' }}
+                    @forelse($apt->serviceTypes as $st)
+                        {{ $st->service_type_name }}{{ !$loop->last ? ', ' : '' }}
+                    @empty
+                        {{ $apt->serviceType->service_type_name ?? '—' }}
+                    @endforelse
                     &mdash; {{ \Carbon\Carbon::parse($apt->appointment_date)->format('M d, Y') }}
                 </div>
             </div>

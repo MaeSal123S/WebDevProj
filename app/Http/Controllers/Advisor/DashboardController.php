@@ -29,14 +29,14 @@ class DashboardController extends Controller
             ->count();
 
         // Today's appointments list
-        $todayAppointments = Appointment::with(['customer', 'vehicle', 'serviceType'])
+        $todayAppointments = Appointment::with(['customer', 'vehicle', 'serviceTypes'])
             ->where('advisor_id', $advisorId)
             ->whereDate('appointment_date', today())
             ->orderBy('appointment_time', 'asc')
             ->get();
 
         // Upcoming appointments (future, pending/confirmed)
-        $upcomingAppointments = Appointment::with(['customer', 'vehicle', 'serviceType'])
+        $upcomingAppointments = Appointment::with(['customer', 'vehicle', 'serviceTypes'])
             ->where('advisor_id', $advisorId)
             ->whereIn('status', ['pending', 'confirmed'])
             ->whereDate('appointment_date', '>', today())

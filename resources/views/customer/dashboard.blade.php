@@ -36,7 +36,11 @@
         <div class="order-dot" style="background:#4f46e5"></div>
         <div class="order-info">
             <div class="order-id">
-                {{ $apt->serviceType->service_type_name ?? '—' }}
+                @forelse($apt->serviceTypes as $st)
+                    <span class="service-badge">{{ $st->service_type_name }}</span>
+                @empty
+                    {{ $apt->serviceType->service_type_name ?? '—' }}
+                @endforelse
             </div>
             <div class="order-meta">
                 {{ $apt->vehicle->plate_number ?? '—' }} &mdash;

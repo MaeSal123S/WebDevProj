@@ -28,7 +28,7 @@ class AppointmentController extends Controller
         }
 
         $advisorId     = Auth::user()->advisor_id;
-        $appointments  = Appointment::with(['customer', 'vehicle', 'serviceType', 'bookedBy'])
+        $appointments  = Appointment::with(['customer', 'vehicle', 'serviceTypes', 'bookedBy'])
             ->where('advisor_id', $advisorId)
             ->orderBy('appointment_date', 'asc')
             ->orderBy('appointment_time', 'asc')
@@ -53,7 +53,7 @@ class AppointmentController extends Controller
         $request->validate([
             'customer_id'      => ['required'],
             'vehicle_id'       => ['required'],
-            'service_type_id'  => ['required'],
+            'service_type_ids' => ['required', 'array', 'min:1'],
             'appointment_date' => ['required', 'date', 'after_or_equal:today'],
             'appointment_time' => ['required'],
         ]);
@@ -61,7 +61,7 @@ class AppointmentController extends Controller
         $appointment = Appointment::create([
             'customer_id'      => $request->customer_id,
             'vehicle_id'       => $request->vehicle_id,
-            'service_type_id'  => $request->service_type_id,
+            'service_type_id'  => $request->service_type_ids[0],
             'advisor_id'       => Auth::user()->advisor_id,
             'appointment_date' => $request->appointment_date,
             'appointment_time' => $request->appointment_time,
@@ -70,6 +70,8 @@ class AppointmentController extends Controller
             'booked_by'        => Auth::id(),
             'created_at'       => now(),
         ]);
+
+        $appointment->serviceTypes()->sync($request->service_type_ids);
 
         AuditLog::create([
             'user_id'    => Auth::id(),
@@ -94,7 +96,7 @@ class AppointmentController extends Controller
         $request->validate([
             'customer_id'      => ['required'],
             'vehicle_id'       => ['required'],
-            'service_type_id'  => ['required'],
+            'service_type_ids' => ['required', 'array', 'min:1'],
             'appointment_date' => ['required', 'date'],
             'appointment_time' => ['required'],
         ]);
@@ -103,11 +105,13 @@ class AppointmentController extends Controller
         $appointment->update([
             'customer_id'      => $request->customer_id,
             'vehicle_id'       => $request->vehicle_id,
-            'service_type_id'  => $request->service_type_id,
+            'service_type_id'  => $request->service_type_ids[0],
             'appointment_date' => $request->appointment_date,
             'appointment_time' => $request->appointment_time,
             'notes'            => $request->notes ?? null,
         ]);
+
+        $appointment->serviceTypes()->sync($request->service_type_ids);
 
         AuditLog::create([
             'user_id'    => Auth::id(),

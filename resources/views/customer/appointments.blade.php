@@ -48,7 +48,13 @@
                         <span style="color:#aaa;">—</span>
                     @endif
                 </td>
-                <td>{{ $apt->serviceType->service_type_name ?? '—' }}</td>
+                <td>
+                    @forelse($apt->serviceTypes as $st)
+                        <span class="service-badge">{{ $st->service_type_name }}</span>
+                    @empty
+                        {{ $apt->serviceType->service_type_name ?? '—' }}
+                    @endforelse
+                </td>
                 <td>
                     @if($apt->advisor)
                         {{ $apt->advisor->first_name }} {{ $apt->advisor->last_name }}
@@ -118,16 +124,19 @@
                 @endif
             </div>
             <div class="form-group">
-                <label>Service Type</label>
-                <select name="service_type_id" required>
-                    <option value="">Select a service</option>
+                <label>Service Types <span style="font-size:11px;color:#777;">(select one or more)</span></label>
+                <div class="checkbox-group" style="max-height:150px;">
                     @foreach($service_types as $st)
-                        <option value="{{ $st->service_type_id }}">
-                            {{ $st->service_type_name }}
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="service_type_ids[]"
+                               value="{{ $st->service_type_id }}">
+                        {{ $st->service_type_name }}
+                        <span style="color:#888;font-size:11px;">
                             ({{ $st->predetermined_hours }}h &mdash; ₱{{ number_format($st->book_rate, 2) }})
-                        </option>
+                        </span>
+                    </label>
                     @endforeach
-                </select>
+                </div>
             </div>
             <div class="form-group">
                 <label>Date</label>
