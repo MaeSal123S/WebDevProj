@@ -1,20 +1,6 @@
 @extends('admin.layouts.app')
 @section('content')
 
-@if(session('success'))
-<div class="alert-success">
-    <i class="ti ti-circle-check"></i>
-    {{ session('success') }}
-</div>
-@endif
-
-@if(session('error'))
-<div class="alert-error">
-    <i class="ti ti-circle-x"></i>
-    {{ session('error') }}
-</div>
-@endif
-
 <div class="page-header">
     <div>
         <div class="section-title">System</div>
