@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Customer\AuthController as CustomerAuthController;
 use App\Http\Controllers\Customer\DashboardController as CustomerDashboard;
 use App\Http\Controllers\Customer\AppointmentController as CustomerAppointmentController;
+use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 
 // Redirect root to login
 Route::get('/', function () {
@@ -181,6 +182,13 @@ Route::post('/register', [CustomerAuthController::class, 'register'])->name('cus
 // Customer portal
 Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->group(function () {
     Route::get('/dashboard', [CustomerDashboard::class, 'index'])->name('dashboard');
+
+    // Profile & vehicles
+    Route::get('/profile', [CustomerProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [CustomerProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/vehicles', [CustomerProfileController::class, 'storeVehicle'])->name('vehicles.store');
+    Route::put('/vehicles/{id}', [CustomerProfileController::class, 'updateVehicle'])->name('vehicles.update');
+    Route::delete('/vehicles/{id}', [CustomerProfileController::class, 'destroyVehicle'])->name('vehicles.destroy');
 
     // Appointments
     Route::get('/appointments', [CustomerAppointmentController::class, 'index'])->name('appointments.index');

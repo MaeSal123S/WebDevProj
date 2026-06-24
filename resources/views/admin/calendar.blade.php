@@ -11,8 +11,8 @@
     </a>
 </div>
 
-<div class="panel">
-    <div id="calendar"></div>
+<div class="panel" style="height: calc(100vh - 160px); display:flex; flex-direction:column;">
+    <div id="calendar" style="flex:1; min-height:0;"></div>
 </div>
 
 <!-- Appointment Detail Modal -->
@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
+        height: '100%',
         headerToolbar: {
             left:   'prev,next today',
             center: 'title',

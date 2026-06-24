@@ -32,6 +32,10 @@
                class="nav-item {{ request()->routeIs('customer.appointments.*') ? 'active' : '' }}">
                 <i class="ti ti-calendar"></i> My Appointments
             </a>
+            <a href="{{ route('customer.profile') }}"
+               class="nav-item {{ request()->routeIs('customer.profile') ? 'active' : '' }}">
+                <i class="ti ti-user"></i> My Profile & Vehicles
+            </a>
         </div>
 
         <div class="sidebar-footer">

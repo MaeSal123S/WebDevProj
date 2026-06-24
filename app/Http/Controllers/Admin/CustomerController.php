@@ -24,7 +24,7 @@ class CustomerController extends Controller
                 ->with('error', 'You do not have permission to view customers!');
         }
 
-        $customers = Customer::orderBy('customer_id', 'desc')->get();
+        $customers = Customer::with('user')->orderBy('customer_id', 'desc')->get();
         return view('admin.customers', compact('customers'));
     }
 

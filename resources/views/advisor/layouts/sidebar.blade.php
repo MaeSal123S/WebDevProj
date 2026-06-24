@@ -29,13 +29,6 @@
         </a>
         @endif
 
-        @if($currentUser->hasPermission('appointment', 'view'))
-        <a href="{{ route('advisor.appointments.index') }}"
-            class="nav-item {{ request()->routeIs('advisor.appointments.*') ? 'active' : '' }}">
-            <i class="ti ti-calendar"></i> Appointments
-        </a>
-        @endif
-
         @if($currentUser->hasPermission('vehicle', 'view'))
         <a href="{{ route('advisor.vehicles.index') }}"
             class="nav-item {{ request()->routeIs('advisor.vehicles.*') ? 'active' : '' }}">
@@ -47,6 +40,13 @@
         <a href="{{ route('advisor.repair_orders.index') }}"
             class="nav-item {{ request()->routeIs('advisor.repair_orders.*') ? 'active' : '' }}">
             <i class="ti ti-clipboard-list"></i> Repair Orders
+        </a>
+        @endif
+
+        @if($currentUser->hasPermission('appointment', 'view'))
+        <a href="{{ route('advisor.appointments.index') }}"
+            class="nav-item {{ request()->routeIs('advisor.appointments.*') ? 'active' : '' }}">
+            <i class="ti ti-calendar"></i> Appointments
         </a>
         @endif
 

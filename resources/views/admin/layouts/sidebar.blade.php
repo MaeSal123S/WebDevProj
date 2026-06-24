@@ -43,12 +43,8 @@
 
         @if($currentUser->hasPermission('appointment', 'view'))
         <a href="{{ route('admin.appointments.index') }}"
-            class="nav-item {{ request()->routeIs('admin.appointments.*') ? 'active' : '' }}">
+            class="nav-item {{ request()->routeIs('admin.appointments.*') || request()->routeIs('admin.calendar') ? 'active' : '' }}">
             <i class="ti ti-calendar"></i> Appointments
-        </a>
-        <a href="{{ route('admin.calendar') }}"
-            class="nav-item {{ request()->routeIs('admin.calendar') ? 'active' : '' }}">
-            <i class="ti ti-calendar-event"></i> Calendar
         </a>
         @endif
 

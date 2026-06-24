@@ -26,6 +26,7 @@
                 <th>No.</th>
                 <th>Last name</th>
                 <th>First name</th>
+                <th>Username</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -35,6 +36,13 @@
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $row->last_name }}</td>
                 <td>{{ $row->first_name }}</td>
+                <td>
+                    @if($row->user)
+                        <span class="user-badge"><i class="ti ti-user"></i> {{ $row->user->username }}</span>
+                    @else
+                        <span style="color:#aaa;font-size:12px;">No account</span>
+                    @endif
+                </td>
                 <td>
                     <button class="btn-edit" onclick="openEditModal(
                         '{{ $row->customer_id }}',
@@ -57,7 +65,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="4" class="empty-row">No customers found</td>
+                <td colspan="5" class="empty-row">No customers found</td>
             </tr>
             @endforelse
         </tbody>

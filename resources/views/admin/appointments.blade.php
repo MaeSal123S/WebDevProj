@@ -97,10 +97,9 @@
                         '{{ $row->customer_id }}',
                         '{{ $row->vehicle_id }}',
                         '{{ $row->service_type_id }}',
-                        '{{ $row->advisor_id ?? 0 }}',
                         '{{ $row->appointment_date }}',
                         '{{ $row->appointment_time }}',
-                        '{{ $row->notes ?? 0 }}'
+                        '{{ $row->notes ?? '' }}'
                     )">
                         <i class="ti ti-edit"></i> Edit
                     </button>
@@ -176,17 +175,6 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Service advisor</label>
-                <select name="advisor_id">
-                    <option value="">Select advisor (optional)</option>
-                    @foreach($advisors as $advisor)
-                        <option value="{{ $advisor->advisor_id }}">
-                            {{ $advisor->first_name }} {{ $advisor->last_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
                 <label>Date</label>
                 <input type="date" name="appointment_date" required
                        min="{{ date('Y-m-d') }}">
@@ -246,17 +234,6 @@
                     @foreach($service_types as $st)
                         <option value="{{ $st->service_type_id }}">
                             {{ $st->service_type_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Service advisor</label>
-                <select name="advisor_id" id="edit_advisor">
-                    <option value="">Select advisor (optional)</option>
-                    @foreach($advisors as $advisor)
-                        <option value="{{ $advisor->advisor_id }}">
-                            {{ $advisor->first_name }} {{ $advisor->last_name }}
                         </option>
                     @endforeach
                 </select>
@@ -345,10 +322,9 @@ function showCustomerVehicle(customerId, displayId, hiddenId) {
         });
 }
 
-function openEditModal(id, customerId, vehicleId, serviceTypeId, advisorId, date, time, notes) {
+function openEditModal(id, customerId, vehicleId, serviceTypeId, date, time, notes) {
     document.getElementById('edit_customer').value = customerId;
     document.getElementById('edit_service_type').value = serviceTypeId;
-    document.getElementById('edit_advisor').value = advisorId;
     document.getElementById('edit_date').value = date;
     document.getElementById('edit_time').value = time;
     document.getElementById('edit_notes').value = notes;
