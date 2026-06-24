@@ -41,6 +41,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Connection of vehicle to customer
     Route::get('/vehicles-by-customer/{customer_id}', [RepairOrderController::class, 'getVehiclesByCustomer'])->name('vehicles.by.customer');
+    // Latest appointment data for pre-filling repair orders
+    Route::get('/appointment-by-customer/{customer_id}', [RepairOrderController::class, 'getAppointmentByCustomer'])->name('appointment.by.customer');
 
     // Dashboard
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
@@ -136,6 +138,8 @@ Route::middleware(['auth', 'advisor'])->prefix('advisor')->name('advisor.')->gro
 
     // Vehicles by customer
     Route::get('/vehicles-by-customer/{customer_id}', [AdvisorRepairOrderController::class, 'getVehiclesByCustomer'])->name('advisor.vehicles.by.customer');
+    // Appointment prefill for repair orders
+    Route::get('/appointment-by-customer/{customer_id}', [AdvisorRepairOrderController::class, 'getAppointmentByCustomer'])->name('advisor.appointment.by.customer');
 
     // Customers
     Route::group(['prefix' => 'customers'], function () {

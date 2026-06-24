@@ -155,4 +155,26 @@ class RepairOrderController extends Controller
         $vehicles = Vehicle::where('customer_id', $customer_id)->get();
         return response()->json($vehicles);
     }
+
+    // Returns the latest pending/confirmed appointment for a customer
+    // so the repair order form can pre-fill vehicle + service types
+    public function getAppointmentByCustomer($customer_id)
+    {
+        $appointment = \App\Models\Appointment::with(['vehicle', 'serviceTypes'])
+            ->where('customer_id', $customer_id)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->orderBy('appointment_date', 'asc')
+            ->first();
+
+        if (!$appointment) {
+            return response()->json(null);
+        }
+
+        return response()->json([
+            'vehicle_id'      => $appointment->vehicle_id,
+            'plate_number'    => $appointment->vehicle->plate_number ?? null,
+            'model'           => $appointment->vehicle->model ?? null,
+            'service_type_ids'=> $appointment->serviceTypes->pluck('service_type_id'),
+        ]);
+    }
 }

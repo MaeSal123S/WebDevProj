@@ -128,7 +128,7 @@
             <div class="form-group">
                 <label>Customer</label>
                 <select name="customer_id" id="add_customer" required
-                    onchange="showCustomerVehicle(this.value, 'add_vehicle_display', 'add_vehicle_id')">
+                    onchange="prefillFromAppointment(this.value)">
                     <option value="">Select customer</option>
                     @foreach($customers as $customer)
                     <option value="{{ $customer->customer_id }}">
@@ -138,7 +138,9 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Vehicle</label>
+                <label>Vehicle
+                    <span style="font-size:11px;color:#777;"> — auto-filled from latest appointment</span>
+                </label>
                 <div id="add_vehicle_display" class="vehicle-display">
                     <i class="ti ti-car"></i> Select a customer first
                 </div>
@@ -264,6 +266,58 @@
         document.getElementById(id).style.display = 'none';
     }
 
+    // Called when customer changes in ADD modal —
+    // fetches latest appointment and pre-fills vehicle + service types
+    function prefillFromAppointment(customerId) {
+        const display = document.getElementById('add_vehicle_display');
+        const hidden  = document.getElementById('add_vehicle_id');
+
+        // Reset checkboxes
+        document.querySelectorAll('#addModal input[name="service_type_ids[]"]')
+            .forEach(cb => cb.checked = false);
+
+        if (!customerId) {
+            display.innerHTML = '<i class="ti ti-car"></i> Select a customer first';
+            hidden.value = '';
+            return;
+        }
+
+        display.innerHTML = '<i class="ti ti-loader"></i> Loading...';
+
+        fetch(`/admin/appointment-by-customer/${customerId}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.vehicle_id) {
+                    // Lock the vehicle — show as read-only display
+                    display.innerHTML = `<i class="ti ti-car"></i> ${data.plate_number} — ${data.model}`;
+                    hidden.value = data.vehicle_id;
+
+                    // Pre-check service types from appointment (still editable)
+                    if (data.service_type_ids && data.service_type_ids.length) {
+                        document.querySelectorAll('#addModal input[name="service_type_ids[]"]')
+                            .forEach(cb => {
+                                cb.checked = data.service_type_ids
+                                    .map(Number)
+                                    .includes(parseInt(cb.value));
+                            });
+                    }
+                } else {
+                    // No appointment — fallback to vehicle list
+                    fetch(`/admin/vehicles-by-customer/${customerId}`)
+                        .then(r => r.json())
+                        .then(vehicles => {
+                            if (vehicles.length === 0) {
+                                display.innerHTML = '<i class="ti ti-alert-circle"></i> No vehicle registered';
+                                hidden.value = '';
+                            } else {
+                                display.innerHTML = `<i class="ti ti-car"></i> ${vehicles[0].plate_number} — ${vehicles[0].model}`;
+                                hidden.value = vehicles[0].vehicle_id;
+                            }
+                        });
+                }
+            });
+    }
+
     function showCustomerVehicle(customerId, displayId, hiddenId) {
         const display = document.getElementById(displayId);
         const hidden = document.getElementById(hiddenId);
@@ -285,7 +339,6 @@
                     display.className = 'vehicle-display';
                     hidden.value = '';
                 } else {
-                    // show first vehicle automatically
                     const vehicle = vehicles[0];
                     display.innerHTML = `<i class="ti ti-car"></i> ${vehicle.plate_number} — ${vehicle.model}`;
                     display.className = 'vehicle-display';
