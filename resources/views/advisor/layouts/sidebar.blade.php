@@ -50,6 +50,31 @@
         </a>
         @endif
 
+        @if($currentUser->hasPermission('audit_log', 'view') || $currentUser->hasPermission('login_log', 'view') || $currentUser->hasPermission('database', 'view'))
+        <div class="nav-label">System</div>
+        @endif
+
+        @if($currentUser->hasPermission('audit_log', 'view'))
+        <a href="{{ route('advisor.audit.index') }}"
+            class="nav-item {{ request()->routeIs('advisor.audit.*') ? 'active' : '' }}">
+            <i class="ti ti-clipboard-data"></i> Audit Logs
+        </a>
+        @endif
+
+        @if($currentUser->hasPermission('login_log', 'view'))
+        <a href="{{ route('advisor.login_logs.index') }}"
+            class="nav-item {{ request()->routeIs('advisor.login_logs.*') ? 'active' : '' }}">
+            <i class="ti ti-shield-lock"></i> Login Logs
+        </a>
+        @endif
+
+        @if($currentUser->hasPermission('database', 'view'))
+        <a href="{{ route('advisor.database.index') }}"
+            class="nav-item {{ request()->routeIs('advisor.database.*') ? 'active' : '' }}">
+            <i class="ti ti-database"></i> View Database
+        </a>
+        @endif
+
     </div>
 
     <div class="sidebar-footer">

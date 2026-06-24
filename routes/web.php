@@ -168,6 +168,11 @@ Route::middleware(['auth', 'advisor'])->prefix('advisor')->name('advisor.')->gro
         Route::put('/{id}', [AdvisorAppointmentController::class, 'update'])->name('appointments.update');
         Route::delete('/{id}', [AdvisorAppointmentController::class, 'destroy'])->name('appointments.destroy');
     });
+
+    // System pages (visible if admin grants permission)
+    Route::get('/audit-logs',  [\App\Http\Controllers\Admin\AuditController::class,    'index'])->name('audit.index');
+    Route::get('/login-logs',  [\App\Http\Controllers\Admin\LoginLogController::class, 'index'])->name('login_logs.index');
+    Route::get('/database',    [\App\Http\Controllers\Admin\DatabaseController::class, 'index'])->name('database.index');
 });
 
 // Fallback route

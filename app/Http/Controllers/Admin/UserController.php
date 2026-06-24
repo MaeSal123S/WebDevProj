@@ -271,12 +271,6 @@ class UserController extends Controller
             'timestamp'  => now(),
         ]);
 
-        // If the affected user is currently logged in, invalidate their session
-        // so the sidebar reflects new permissions immediately on next request
-        \Illuminate\Support\Facades\DB::table('sessions')
-            ->where('user_id', $user->user_id)
-            ->delete();
-
         return redirect()->route('admin.users.index')
             ->with('success', "Permissions updated for {$user->username}. Changes take effect on their next page load.");
     }
