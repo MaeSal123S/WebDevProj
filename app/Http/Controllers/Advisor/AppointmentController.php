@@ -114,6 +114,35 @@ class AppointmentController extends Controller
             ->with('success', 'Appointment declined.');
     }
 
+    // Update status (requires appointment.status permission)
+    public function updateStatus(Request $request, $id)
+    {
+        if (!$this->currentUser()->hasPermission('appointment', 'status')) {
+            return redirect()->route('advisor.appointments.index')
+                ->with('error', 'You do not have permission to change appointment status!');
+        }
+
+        $request->validate([
+            'status' => ['required', 'in:pending,confirmed,cancelled,completed'],
+        ]);
+
+        $advisorId   = Auth::user()->advisor_id;
+        $appointment = Appointment::where('advisor_id', $advisorId)->findOrFail($id);
+        $appointment->update(['status' => $request->status]);
+
+        AuditLog::create([
+            'user_id'    => Auth::id(),
+            'action'     => 'UPDATE',
+            'table_name' => 'appointments',
+            'record_id'  => $id,
+            'changes'    => "Updated appointment #{$id} status to {$request->status}",
+            'timestamp'  => now(),
+        ]);
+
+        return redirect()->route('advisor.appointments.index')
+            ->with('success', 'Appointment status updated.');
+    }
+
     public function store(Request $request)
     {
         if (!$this->currentUser()->hasPermission('appointment', 'add')) {

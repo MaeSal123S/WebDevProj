@@ -173,6 +173,7 @@ Route::middleware(['auth', 'advisor'])->prefix('advisor')->name('advisor.')->gro
         Route::delete('/{id}', [AdvisorAppointmentController::class, 'destroy'])->name('appointments.destroy');
         Route::put('/{id}/accept', [AdvisorAppointmentController::class, 'accept'])->name('appointments.accept');
         Route::put('/{id}/decline', [AdvisorAppointmentController::class, 'decline'])->name('appointments.decline');
+        Route::put('/{id}/status', [AdvisorAppointmentController::class, 'updateStatus'])->name('appointments.status');
     });
 
     // System pages (visible if admin grants permission)

@@ -191,6 +191,14 @@
                     </span>
                 </td>
                 <td style="white-space:nowrap;">
+                    @if($currentUser->hasPermission('appointment', 'status'))
+                    <button class="btn-status" onclick="openStatusModal(
+                        '{{ $row->appointment_id }}',
+                        '{{ $row->status }}'
+                    )">
+                        <i class="ti ti-refresh"></i> Status
+                    </button>
+                    @endif
                     @if($currentUser->hasPermission('appointment', 'edit'))
                     <button class="btn-edit" onclick="openEditModal(
                         '{{ $row->appointment_id }}',
@@ -353,6 +361,36 @@
     </div>
 </div>
 
+{{-- STATUS MODAL --}}
+<div class="modal-overlay" id="statusModal">
+    <div class="modal-box" style="width:380px;">
+        <div class="modal-header">
+            <h6>Update Appointment Status</h6>
+            <button class="modal-close" onclick="closeModal('statusModal')">
+                <i class="ti ti-x"></i>
+            </button>
+        </div>
+        <form method="POST" id="statusForm" action="">
+            @csrf
+            @method('PUT')
+            <div class="form-group">
+                <label>Status</label>
+                <select name="status" id="status_select" required>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary"
+                        onclick="closeModal('statusModal')">Cancel</button>
+                <button type="submit" class="btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -416,6 +454,12 @@ function searchTable() {
     document.querySelectorAll('#appointmentTable tbody tr').forEach(row => {
         row.style.display = row.innerText.toLowerCase().includes(input) ? '' : 'none';
     });
+}
+
+function openStatusModal(id, currentStatus) {
+    document.getElementById('status_select').value = currentStatus;
+    document.getElementById('statusForm').action   = `/advisor/appointments/${id}/status`;
+    openModal('statusModal');
 }
 </script>
 @endsection
