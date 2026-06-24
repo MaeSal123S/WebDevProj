@@ -10,7 +10,7 @@
         .login-wrap {
             background:
                 linear-gradient(135deg, rgba(8,0,0,0.85) 0%, rgba(80,10,10,0.78) 50%, rgba(8,0,0,0.9) 100%),
-                url('{{ asset('Images/Vi.png') }}') center center / cover no-repeat fixed;
+                url('{{ asset('Images/FINALS.png') }}') center center / cover no-repeat fixed;
         }
         .auth-split {
             display: flex;
