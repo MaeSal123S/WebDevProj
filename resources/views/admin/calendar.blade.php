@@ -71,10 +71,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         height: '100%',
+        dayMaxEvents: true,           // show "+X more" link instead of clipping
+        eventMaxStack: 3,             // max visible events per day before collapsing
         headerToolbar: {
             left:   'prev,next today',
             center: 'title',
             right:  'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        eventTimeFormat: {
+            hour:   'numeric',
+            minute: '2-digit',
+            meridiem: 'short'
         },
         events: "{{ route('admin.appointments.data') }}",
         eventClick: function(info) {
@@ -86,7 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('detail_notes').innerText    = props.notes;
             openModal('detailModal');
         },
-        eventColor: '#4f46e5',
+        eventDidMount: function(info) {
+            // Ensure event text is never clipped — allow wrapping
+            info.el.style.whiteSpace = 'normal';
+            info.el.style.overflow   = 'visible';
+        },
     });
 
     calendar.render();

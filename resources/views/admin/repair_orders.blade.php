@@ -159,6 +159,9 @@
             </div>
             <div class="form-group">
                 <label>Service types</label>
+                <div id="add_service_hint" style="display:none;color:#ff6b6b;font-size:12px;padding:4px 0;">
+                    <i class="ti ti-alert-circle"></i> Please select at least one service type.
+                </div>
                 <div class="checkbox-group">
                     @foreach($service_types as $st)
                     <label class="checkbox-item">
@@ -176,7 +179,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn-secondary"
                     onclick="closeModal('addModal')">Cancel</button>
-                <button type="submit" class="btn-primary">Save</button>
+                <button type="submit" class="btn-primary"
+                        onclick="return requireServiceType(this.closest('form'), 'addModal')">Save</button>
             </div>
         </form>
     </div>
@@ -230,6 +234,9 @@
             </div>
             <div class="form-group">
                 <label>Service types</label>
+                <div id="edit_service_hint" style="display:none;color:#ff6b6b;font-size:12px;padding:4px 0;">
+                    <i class="ti ti-alert-circle"></i> Please select at least one service type.
+                </div>
                 <div class="checkbox-group">
                     @foreach($service_types as $st)
                     <label class="checkbox-item">
@@ -248,7 +255,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn-secondary"
                     onclick="closeModal('editModal')">Cancel</button>
-                <button type="submit" class="btn-primary">Update</button>
+                <button type="submit" class="btn-primary"
+                        onclick="return requireServiceType(this.closest('form'), 'editModal')">Update</button>
             </div>
         </form>
     </div>
@@ -264,6 +272,19 @@
 
     function closeModal(id) {
         document.getElementById(id).style.display = 'none';
+    }
+
+    // Validates that at least one service type checkbox is checked before submitting
+    function requireServiceType(form, modalId) {
+        const checked = form.querySelectorAll('input[name="service_type_ids[]"]:checked');
+        const hintId  = modalId === 'addModal' ? 'add_service_hint' : 'edit_service_hint';
+        const hint    = document.getElementById(hintId);
+        if (checked.length === 0) {
+            if (hint) hint.style.display = 'block';
+            return false; // prevent form submission
+        }
+        if (hint) hint.style.display = 'none';
+        return true;
     }
 
     // Called when customer changes in ADD modal —

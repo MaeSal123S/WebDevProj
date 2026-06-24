@@ -1130,10 +1130,15 @@ body {
 .detail-label { color: #777; font-weight: 500; }
 .detail-value { color: #e0e0e0; text-align: right; }
 
-/* ================================================
-   CALENDAR
-   ================================================ */
+/* CALENDAR */
 #calendar { padding: 8px; }
+
+/* Prevent event title cutoff in month view */
+.fc-daygrid-event-dot { display: none; }
+.fc-daygrid-event { white-space: normal !important; overflow: visible !important; }
+.fc-event-title { white-space: normal !important; overflow: visible !important; font-weight: 600; font-size: 11px; }
+.fc-event-time  { font-size: 11px; opacity: 0.85; }
+.fc-daygrid-dot-event .fc-event-title { padding: 0 2px; }
 
 /* Dark mode calendar overrides */
 .fc { color: #d0d0d0; }
