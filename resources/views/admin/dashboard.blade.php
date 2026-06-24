@@ -158,12 +158,16 @@
     <div class="order-row">
         @php
             $badgeClass = match($log->action) {
-                'INSERT' => 'badge-insert',
-                'UPDATE' => 'badge-update',
-                'DELETE' => 'badge-delete',
-                'LOGIN'  => 'badge-login',
-                'LOGOUT' => 'badge-logout',
-                default  => ''
+                'INSERT'        => 'badge-insert',
+                'UPDATE'        => 'badge-update',
+                'DELETE'        => 'badge-delete',
+                'LOGIN'         => 'badge-login',
+                'LOGOUT'        => 'badge-logout',
+                'LOGIN_FAILED'  => 'badge-failed',
+                'LOGIN_LOCKED'  => 'badge-locked',
+                'LOGIN_BLOCKED' => 'badge-locked',
+                'PASSWORD_RESET'=> 'badge-reset',
+                default         => 'badge-update'
             };
         @endphp
         <span class="action-badge {{ $badgeClass }}">{{ $log->action }}</span>
@@ -171,7 +175,7 @@
             <div class="order-id">{{ $log->changes }}</div>
             <div class="order-meta">by {{ $log->user->username ?? '—' }}</div>
         </div>
-        <div class="order-date" style="font-size:11px;color:#aaa;">
+        <div class="order-date" style="font-size:11px;color:#999;">
             {{ \Carbon\Carbon::parse($log->timestamp)->format('M d, h:i A') }}
         </div>
     </div>

@@ -732,18 +732,18 @@ body {
 }
 
 .data-table thead tr {
-    background: rgba(192,57,43,0.12);
-    border-bottom: 1px solid rgba(192,57,43,0.25);
+    background: linear-gradient(90deg, rgba(192,57,43,0.35), rgba(150,40,27,0.2));
+    border-bottom: 1px solid rgba(192,57,43,0.5);
 }
 
 .data-table th {
     padding: 10px 14px;
     text-align: left;
-    font-weight: 600;
-    color: #aaa;
+    font-weight: 700;
+    color: #e0a090;
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.07em;
 }
 
 .data-table td {
@@ -1180,3 +1180,87 @@ body {
 .text-small { font-size: 11px; }
 .mt-12 { margin-top: 12px; }
 .mb-16 { margin-bottom: 16px; }
+
+/* ================================================
+   DARK MODE INLINE COLOR OVERRIDES
+   Fixes all inline color:#aaa / #888 / #555 that
+   are invisible on dark backgrounds
+   ================================================ */
+
+/* Small secondary text inside table cells */
+.data-table td small,
+.panel td small { color: #999 !important; }
+
+/* Dash / empty placeholders */
+.data-table td span[style*="color:#aaa"],
+.data-table td span[style*="color: #aaa"],
+.panel .order-row span[style*="color:#aaa"] { color: #666 !important; }
+
+/* Deleted / soft label text */
+.data-table td span[style*="font-size:10px"],
+.data-table td span[style*="font-size: 10px"] { color: #888 !important; }
+
+/* Hint / optional labels in modal forms */
+.form-group label span[style*="color:#aaa"],
+.form-group label span[style*="color: #aaa"] { color: #777 !important; }
+
+/* Service type price hint inside checkboxes */
+.checkbox-item span[style*="color:#888"],
+.checkbox-group span[style*="color:#888"] { color: #999 !important; }
+
+/* Password hint */
+.modal-header + form span[style*="color:#aaa"] { color: #777 !important; }
+
+/* Dashboard timestamp */
+.order-date[style*="color:#aaa"] { color: #777 !important; }
+
+/* Disabled input (username in customer profile) */
+input[disabled] {
+    background: #2a2a2a !important;
+    color: #666 !important;
+    border-color: rgba(255,255,255,0.06) !important;
+    cursor: not-allowed;
+}
+
+/* "No account" text in customer column */
+.data-table td span[style*="font-size:12px"] { color: #777 !important; }
+
+/* General: any inline color:#555 anywhere in the app */
+[style*="color:#555"] { color: #999 !important; }
+[style*="color: #555"] { color: #999 !important; }
+
+/* ================================================
+   COMPREHENSIVE INLINE COLOR OVERRIDES
+   Catches all #aaa / #888 / #555 inline styles
+   that were written for light mode
+   ================================================ */
+[style*="color:#aaa"]  { color: #777 !important; }
+[style*="color: #aaa"] { color: #777 !important; }
+[style*="color:#888"]  { color: #999 !important; }
+[style*="color: #888"] { color: #999 !important; }
+[style*="color:#555"]  { color: #aaa !important; }
+[style*="color: #555"] { color: #aaa !important; }
+
+/* Small secondary text in table cells */
+.data-table small,
+.panel small { color: #999 !important; }
+
+/* "optional" / hint labels in forms */
+.form-group label span { color: #777; }
+
+/* Status dots in dashboard order rows */
+.order-dot[style*="background:#4f46e5"] {
+    background: var(--red) !important;
+}
+
+/* Repair order/appointment meta timestamps inline */
+[style*="font-size:11px"][style*="color:#aaa"] { color: #777 !important; }
+[style*="font-size:10px"][style*="color:#aaa"] { color: #777 !important; }
+[style*="font-size:12px"][style*="color:#aaa"] { color: #888 !important; }
+
+/* Margin/padding inline style overrides for dark surfaces */
+.stat-grid [style*="color:"] { color: inherit; }
+.stat-card [style*="color: #0f6e56"] { color: #4ddb8a !important; }
+.stat-card [style*="color: #993c1d"] { color: #ff8a70 !important; }
+.stat-card [style*="color:#0f6e56"]  { color: #4ddb8a !important; }
+.stat-card [style*="color:#993c1d"]  { color: #ff8a70 !important; }

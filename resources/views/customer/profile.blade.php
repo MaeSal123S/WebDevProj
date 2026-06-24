@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" value="{{ Auth::user()->username }}" disabled
-                       style="background:#f8f8fc; color:#aaa; cursor:not-allowed;">
+                       style="background:#2a2a2a; color:#666; cursor:not-allowed; border-color:rgba(255,255,255,0.06);">
             </div>
             <div style="padding:12px 20px 16px;">
                 <button type="submit" class="btn-primary">

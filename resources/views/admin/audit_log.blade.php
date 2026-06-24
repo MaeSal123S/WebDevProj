@@ -52,14 +52,14 @@
                     'LOGIN_LOCKED' => 'badge-locked',
                     'LOGIN_BLOCKED' => 'badge-locked',
                     'PASSWORD_RESET' => 'badge-reset',
-                    default => ''
+                    default => 'badge-update'
                     };
                     @endphp
                     <span class="action-badge {{ $badgeClass }}">{{ $log->action }}</span>
                 </td>
                 <td><span class="table-badge">{{ $log->table_name }}</span></td>
                 <td>{{ $log->record_id }}</td>
-                <td style="font-size:12px;color:#555">{{ $log->changes }}</td>
+                <td style="font-size:12px; color:#bbb;">{{ $log->changes }}</td>
             </tr>
             @empty
             <tr>
