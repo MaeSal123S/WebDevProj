@@ -70,17 +70,3 @@
         </div>
     </div>
 </div>
-
-<div class="main">
-    <div class="topbar">
-        <div class="topbar-left">
-            <div class="page-title">{{ $pageTitle ?? 'Dashboard' }}</div>
-            <div class="breadcrumb-text">Home / {{ $pageTitle ?? 'Dashboard' }}</div>
-        </div>
-        <div class="topbar-right">
-            <div class="icon-btn">
-                <i class="ti ti-bell"></i>
-            </div>
-        </div>
-    </div>
-    <div class="content">
