@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'role',
         'advisor_id',
+        'customer_id',
     ];
 
     protected $hidden = [
@@ -46,6 +47,10 @@ class User extends Authenticatable
 
     public function advisor() {
         return $this->belongsTo(ServiceAdvisor::class, 'advisor_id', 'advisor_id');
+    }
+
+    public function customer() {
+        return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
     }
 
     public function userPermissions() {

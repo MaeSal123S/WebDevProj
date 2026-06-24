@@ -19,6 +19,9 @@ use App\Http\Controllers\Advisor\VehicleController as AdvisorVehicleController;
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Advisor\AppointmentController as AdvisorAppointmentController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Customer\AuthController as CustomerAuthController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboard;
+use App\Http\Controllers\Customer\AppointmentController as CustomerAppointmentController;
 
 // Redirect root to login
 Route::get('/', function () {
@@ -169,4 +172,18 @@ Route::middleware(['auth', 'advisor'])->prefix('advisor')->name('advisor.')->gro
 // Fallback route
 Route::fallback(function () {
     return redirect()->route('login');
+});
+
+// Customer registration
+Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('customer.register');
+Route::post('/register', [CustomerAuthController::class, 'register'])->name('customer.register.submit');
+
+// Customer portal
+Route::middleware(['auth', 'customer'])->prefix('customer')->name('customer.')->group(function () {
+    Route::get('/dashboard', [CustomerDashboard::class, 'index'])->name('dashboard');
+
+    // Appointments
+    Route::get('/appointments', [CustomerAppointmentController::class, 'index'])->name('appointments.index');
+    Route::post('/appointments', [CustomerAppointmentController::class, 'store'])->name('appointments.store');
+    Route::delete('/appointments/{id}', [CustomerAppointmentController::class, 'destroy'])->name('appointments.destroy');
 });

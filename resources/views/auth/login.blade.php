@@ -55,6 +55,13 @@
                     Forgot password?
                 </a>
             </div>
+            <div style="text-align:center; margin-top:12px; font-size:13px; color:#888;">
+                New customer?
+                <a href="{{ route('customer.register') }}"
+                    style="color:#4f46e5; text-decoration:none; font-weight:500;">
+                    Register here
+                </a>
+            </div>
         </div>
     </div>
 
