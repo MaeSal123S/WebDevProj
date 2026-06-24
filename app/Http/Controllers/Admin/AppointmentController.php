@@ -185,11 +185,12 @@ class AppointmentController extends Controller
         $appointments = Appointment::with(['customer', 'serviceTypes', 'advisor'])
             ->get()
             ->map(function ($appointment) {
+                // Vivid solid colors that pop on dark calendar cells
                 $statusColors = [
-                    'pending'   => '#7d4e00',
-                    'confirmed' => '#0a4d28',
-                    'cancelled' => '#5c1010',
-                    'completed' => '#2d1a5c',
+                    'pending'   => '#b86e00',  // warm amber
+                    'confirmed' => '#0e6b38',  // strong green
+                    'cancelled' => '#8a1515',  // deep red
+                    'completed' => '#3d2480',  // rich purple
                 ];
 
                 $serviceNames = $appointment->serviceTypes->isNotEmpty()

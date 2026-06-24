@@ -1130,43 +1130,173 @@ body {
 .detail-label { color: #777; font-weight: 500; }
 .detail-value { color: #e0e0e0; text-align: right; }
 
-/* CALENDAR */
-#calendar { padding: 8px; }
+/* ================================================
+   CALENDAR — Full Dark Red Theme
+   ================================================ */
+#calendar { padding: 4px 8px 8px; }
 
-/* Prevent event title cutoff in month view */
-.fc-daygrid-event-dot { display: none; }
-.fc-daygrid-event { white-space: normal !important; overflow: visible !important; }
-.fc-event-title { white-space: normal !important; overflow: visible !important; font-weight: 600; font-size: 11px; }
-.fc-event-time  { font-size: 11px; opacity: 0.85; }
-.fc-daygrid-dot-event .fc-event-title { padding: 0 2px; }
+/* ---- Grid structure ---- */
+.fc { color: #d0d0d0; font-family: 'Segoe UI', sans-serif; }
+.fc-theme-standard td,
+.fc-theme-standard th            { border-color: rgba(255,255,255,0.06); }
+.fc-theme-standard .fc-scrollgrid { border-color: rgba(255,255,255,0.06); }
 
-/* Dark mode calendar overrides */
-.fc { color: #d0d0d0; }
-.fc .fc-toolbar-title { color: #e8e8e8; font-size: 16px; }
-.fc .fc-col-header-cell-cushion { color: #aaa; text-decoration: none; }
-.fc .fc-daygrid-day-number { color: #999; text-decoration: none; }
-.fc .fc-daygrid-day-number:hover { color: #e74c3c; }
-.fc-day-today .fc-daygrid-day-number { color: #e74c3c !important; font-weight: 700; }
-.fc-theme-standard td, .fc-theme-standard th { border-color: rgba(255,255,255,0.07); }
-.fc-theme-standard .fc-scrollgrid { border-color: rgba(255,255,255,0.07); }
-.fc-day-today { background: rgba(192,57,43,0.08) !important; }
-.fc-col-header-cell { background: rgba(192,57,43,0.1); }
-.fc .fc-daygrid-day.fc-day-other .fc-daygrid-day-number { color: #444; }
+/* ---- Toolbar ---- */
+.fc .fc-toolbar-title {
+    color: #e8e8e8;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+.fc .fc-toolbar { padding: 8px 4px; }
 
+/* ---- Navigation buttons ---- */
+.fc .fc-button {
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 5px 12px !important;
+    transition: all 0.15s !important;
+}
 .fc .fc-button-primary {
     background: var(--red) !important;
     border-color: var(--red-dark) !important;
     color: #fff !important;
-    font-size: 12px;
+    box-shadow: 0 2px 6px rgba(192,57,43,0.35) !important;
 }
-
-.fc .fc-button-primary:hover { background: var(--red-dark) !important; }
-
+.fc .fc-button-primary:hover {
+    background: var(--red-dark) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(192,57,43,0.45) !important;
+}
 .fc .fc-button-primary:not(:disabled):active,
 .fc .fc-button-primary:not(:disabled).fc-button-active {
-    background: var(--red-dark) !important;
+    background: #6e1b13 !important;
     border-color: #6e1b13 !important;
+    box-shadow: none !important;
+    transform: none !important;
 }
+
+/* ---- Column headers (Mon, Tue…) ---- */
+.fc .fc-col-header-cell {
+    background: rgba(192,57,43,0.15);
+    padding: 8px 0;
+}
+.fc .fc-col-header-cell-cushion {
+    color: #e0a090;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+}
+
+/* ---- Day cells ---- */
+.fc .fc-daygrid-day-number {
+    color: #888;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 4px 6px;
+}
+.fc .fc-daygrid-day-number:hover { color: var(--red-light); }
+.fc .fc-daygrid-day.fc-day-other .fc-daygrid-day-number { color: #444; }
+
+/* Today highlight */
+.fc-day-today {
+    background: rgba(192,57,43,0.1) !important;
+}
+.fc-day-today .fc-daygrid-day-number {
+    color: var(--red-light) !important;
+    font-weight: 700;
+    background: var(--red);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+}
+
+/* ---- Events ---- */
+.fc-daygrid-event {
+    border-radius: 5px !important;
+    border: none !important;
+    padding: 2px 6px !important;
+    margin: 1px 2px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    cursor: pointer;
+    transition: filter 0.15s, transform 0.15s;
+}
+.fc-daygrid-event:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+}
+.fc-event-title {
+    white-space: normal !important;
+    overflow: visible !important;
+    font-weight: 600;
+    font-size: 11px;
+}
+.fc-event-time { font-size: 10px; opacity: 0.9; }
+.fc-daygrid-event-dot { display: none; }
+
+/* ---- "+X more" link ---- */
+.fc-daygrid-more-link {
+    color: var(--red-light) !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 1px 4px !important;
+    border-radius: 4px !important;
+    background: rgba(192,57,43,0.15) !important;
+    text-decoration: none !important;
+    margin: 1px 2px !important;
+    display: inline-block;
+}
+.fc-daygrid-more-link:hover {
+    background: rgba(192,57,43,0.35) !important;
+    color: #fff !important;
+}
+
+/* ---- Popover (the "+X more" expanded box) ---- */
+.fc-popover {
+    background: #222 !important;
+    border: 1px solid rgba(192,57,43,0.3) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+    overflow: hidden;
+}
+.fc-popover-header {
+    background: rgba(192,57,43,0.2) !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: #e0a090 !important;
+    border-bottom: 1px solid rgba(192,57,43,0.2) !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fc-popover-title { color: #e0a090 !important; }
+.fc-popover-close {
+    color: #888 !important;
+    font-size: 14px !important;
+    cursor: pointer;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+}
+.fc-popover-close:hover { color: var(--red-light) !important; }
+.fc-popover-body {
+    padding: 8px !important;
+    background: #222 !important;
+}
+
 
 /* ================================================
    CUSTOMER PORTAL
