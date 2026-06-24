@@ -67,7 +67,7 @@
                         <span style="color:#aaa">—</span>
                     @endif
                 </td>
-                <td>
+                <td class="service-col">
                     @forelse($row->serviceTypes as $st)
                         <span class="service-badge">{{ $st->service_type_name }}</span>
                     @empty
@@ -96,7 +96,7 @@
                     </span>
                 </td>
                 <td>{{ $row->bookedBy->username ?? '—' }}</td>
-                <td>
+                <td style="white-space:nowrap;">
                     @if($currentUser->hasPermission('appointment', 'edit'))
                     <button class="btn-edit" onclick="openEditModal(
                         '{{ $row->appointment_id }}',

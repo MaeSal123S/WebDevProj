@@ -68,7 +68,7 @@
                     <span style="color:#aaa">— deleted —</span>
                     @endif
                 </td>
-                <td>
+                <td class="service-col">
                     @foreach($row->serviceTypes as $st)
                     <span class="service-badge">
                         {{ $st->service_type_name }}

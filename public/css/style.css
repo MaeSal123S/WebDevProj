@@ -750,6 +750,15 @@ body {
     padding: 11px 14px;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     color: #d0d0d0;
+    vertical-align: middle;
+}
+
+/* Service badge column — constrain width so badges wrap inside the cell */
+.data-table td .service-badge { white-space: nowrap; }
+.data-table .service-col {
+    max-width: 200px;
+    min-width: 120px;
+    line-height: 1.8;
 }
 
 .data-table tbody tr:hover { background: linear-gradient(90deg, rgba(192,57,43,0.22), rgba(192,57,43,0.08)); }

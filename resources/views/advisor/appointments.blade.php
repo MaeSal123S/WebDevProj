@@ -76,7 +76,7 @@
                         <span style="color:#666;">—</span>
                     @endif
                 </td>
-                <td>
+                <td class="service-col">
                     @forelse($row->serviceTypes as $st)
                         <span class="service-badge">{{ $st->service_type_name }}</span>
                     @empty
@@ -169,7 +169,7 @@
                         <span style="color:#666;">—</span>
                     @endif
                 </td>
-                <td>
+                <td class="service-col">
                     @forelse($row->serviceTypes as $st)
                         <span class="service-badge">{{ $st->service_type_name }}</span>
                     @empty
